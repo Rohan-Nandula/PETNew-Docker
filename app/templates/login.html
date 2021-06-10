@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">  
+ <div class="column is-6 is-offset-3">
+	<div class="nav">
+      		<nav align="center">
+           		<div class="title is-1" style="color:#eb581a">
+				   Login
+			   </div>			  
+		   </nav>
+     </div>
+	
+    <div class="box" style="background-color:#7ef2dd">
+		{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			<div class="notification is-danger">
+				{{ messages[0] }}
+			</div>
+		{% endif %}
+		{% endwith %}
+
+        <form method="POST" action="/login">
+			<h4 style="color: brown;" align="left">Email *</h4>	
+            <div class="field">				
+                <div class="control">
+                    <input class="input is-large" type="email" name="email" placeholder="Your Email" autofocus="">
+                </div>
+            </div>
+			<h4 style="color: brown;" align="left">Enter Password *</h4>
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="password" name="password" placeholder="Your Password">
+                </div>
+            </div>
+            <div class="field">
+                <label class="checkbox">
+                    <input type="checkbox" name="remember" value="remember">
+                    <b>Remember me</b>
+                </label>
+            </div>
+            <button type="submit" class="button is-medium is-link">Login</button>
+        </form>
+    </div>
+	<div style="color:maroon"><h2>{{ pred }}</h2></div>
+</div>
+
+{% endblock %}

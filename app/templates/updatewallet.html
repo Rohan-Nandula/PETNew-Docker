@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">    
+
+		<div class="nav">
+      		<nav>
+           		<div class="title" style="background-color:#eb581a">
+				   Update Wallet Balance
+			   </div>			  
+		   </nav>
+        </div>
+		  
+             <div class="box" style="background-color:#7ef2dd">
+ 					<form action="{{url_for('main.updatewalletpage')}}" method="POST">
+						<h4 style="color: red;" align="left">Email *</h4>
+						<input type="email" name="user" placeholder="Enter email id" class="form-control" required>
+						<h4 style="color: red;" align="left">Amount *</h4>
+						<input type="text" name="amount" placeholder="Enter amount to be added" class="form-control" required>
+						<button type="submit" class="button is-medium is-link">Update Balance</button>
+						<a href='/' class="button is-medium is-info">Back</a>
+					</form>				
+				<div style="color:yellow"><h3>{{ pred }}</h3></div>
+
+            </div>
+         
+
+    	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+{% endblock %}

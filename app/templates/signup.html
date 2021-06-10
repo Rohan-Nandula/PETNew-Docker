@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+ <div class="column is-6 is-offset-3">
+    <div class="nav">
+      		<nav align="center">
+           		<div class="title is-1" style="color:#eb581a">
+				   Sign Up
+			   </div>			  
+		   </nav>
+     </div>
+     <div class="box" style="background-color:#7ef2dd" align="top" height="v100h">
+		{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			<div class="notification is-danger">
+				{{ messages[0] }}. Go to <a href="{{ url_for('auth.login') }}">login page</a>.
+			</div>
+		{% endif %}
+		{% endwith %}
+        <form action="{{url_for('auth.register')}}" method="POST">
+			
+            <div class="field">
+                <div class="control">
+                    <input class="input is-primary" type="text" name="name" placeholder="Enter Name" autofocus="">
+                </div>
+            </div>
+			
+            <div class="field">
+                <div class="control">
+                    <input class="input is-primary" type="email" name="email" placeholder="Enter Email ID" autofocus="">
+                </div>
+            </div>
+				
+            <div class="field">
+                <div class="control">
+                    <input class="input is-primary" type="text" name="phone" placeholder="Enter Contact Number" autofocus="">
+                </div>
+            </div>
+			
+            <div class="field">
+                <div class="control">
+                    <input class="input is-primary" type="text" name="city" placeholder="Enter your city" autofocus="">
+                </div>
+            </div>
+			
+			<div class="field">
+                <div class="control">
+                    <input class="input is-primary" type="text" name="occupation" placeholder="Enter your occupation" autofocus="">
+                </div>
+            </div>
+			
+            <div class="field">
+                <div class="control">
+                    <input class="input is-primary" type="password" name="password" placeholder="Enter Password">
+                </div>
+            </div>
+			
+			<div class="field">
+				<button type="submit" class="button is-medium is-link">SignUp</button>
+				<input type="checkbox" name="tandc" value="tandc" >
+						I agree to the <a href="#" >terms and conditions</a>								
+			</div>
+        </form>
+    </div>
+	<div style="color:black"><h2>{{ pred }}</h2></div>
+</div>
+{% endblock %}

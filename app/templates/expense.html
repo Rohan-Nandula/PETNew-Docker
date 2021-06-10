@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">    
+
+ 
+        <div class="nav">
+      		<nav>
+           		<div class="title" style="background-color:#eb581a">
+				   Update Personal Expenses
+			   </div>			  
+		   </nav>
+        </div>
+
+		   
+             <div class="box" style="background-color:#7ef2dd">					
+						
+							<form action="{{url_for('main.expensepage')}}" method="POST">
+								<h4 style="color: brown;" align="left">Email *</h4>								
+								<input type="email" name="user" placeholder="Enter email id" class="form-control" required>									
+								<h4 style="color: brown;" align="left">Select Date *</h4>
+								<input type="date" name="expensedate" min="01/01/2018" max="01/01/2050" class="form-control" required>
+								<h4 style="color: brown;" align="left">Expense Type *</h4>
+								<select name="expensetype" id="type" class="form-control" required>									
+										<option value="medical_expenses">Medical</option>
+										<option value="vehicle_expenses">Vehicle</option>
+										<option value="home_expenses">Home</option>									
+								 </select>
+								<h4 style="color: brown;" align="left">Amount *</h4>
+								<input type="text" name="expenseamount" placeholder="Expense Amount paid" class="form-control" required>
+								<button type="submit" class="button is-medium is-link">Add Expense</button>
+								<a href='/' class="button is-medium is-info">Back</a>
+				 			</form>
+				 	    
+				 	    <div style="color:yellow">{{ pred }}</div>
+				  
+				  
+		   </div>
+	   
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+{% endblock %}
