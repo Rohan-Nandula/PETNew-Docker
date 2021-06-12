@@ -4,8 +4,28 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">    
 <link rel="stylesheet" href="{{url_for('static', filename='css/login.css')}}">
+<script>
+div.container {
+    background-color: #FF0000;
+    margin: auto;   
+    width: 304px;
+}
+
+div.div1 {
+    border: 1px solid #000;
+    float: left;
+    width: 50%;
+	text-align: center;
+}
+
+div.div2 {
+    border: 1px solid red;
+    float: right;
+    width: 50%;
+	text-align: center;
+}
 </script>
-		
+	<div class="box" style="background-color:#7ef2dd">	
 		<div class="nav">
       		<nav>
            		<div class="title" style="background-color:#eb581a">
@@ -14,12 +34,14 @@
 		   </nav>
         </div>
 		<!-- Line chart canvas element -->
-							
-		<canvas id="canvas" height=400 width=1000></canvas>			
-		
+		<div class="container">						
+			<div class="div2">				
+				<canvas id="canvas" height=400 width=1000></canvas>				
+			</div>
+		</div>
 		<div style="color:yellow"><h3>{{ pred }}</h3></div>	
 
-	
+	</div>
 <!--suppress JSUnresolvedLibraryURL -->
 
 <script>

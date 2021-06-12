@@ -1,13 +1,20 @@
 # auth.py
 
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify, make_response, session, escape, current_app
 from flask_login import login_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User
 from . import db
 import requests
+import jwt 
+import uuid # for public id
+import datetime
+from functools import wraps
+
+
 
 auth = Blueprint('auth', __name__)
+
 
 # Function to check user credentials - AWS API User Details
 def check(user):
@@ -22,7 +29,33 @@ def registeruser(params):
     status = requests.request("GET",url)
     print(status.json())
     return status.json()
-	
+
+# decorator for verifying the JWT
+def token_required(f):
+	@wraps(f)
+	def decorated(*args, **kwargs):
+		token = None
+		# jwt is passed in the request header
+		if 'x-access-token' in request.headers:
+			token = request.headers['x-access-token']
+		# return 401 if token is not passed
+		if not token:
+			return jsonify({'message' : 'Token is missing !!'}), 401
+
+		try:
+			# decoding the payload to fetch the stored details
+			data = jwt.decode(token, app.config['SECRET_KEY'])
+			current_user = User.query\
+				.filter_by(public_id = data['public_id'])\
+				.first()
+		except:
+			return jsonify({
+				'message' : 'Token is invalid !!'
+			}), 401
+		# returns the current logged in users contex to the routes
+		return f(current_user, *args, **kwargs)
+
+	return decorated	
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -42,8 +75,12 @@ def login():
 			if not user or not check_password_hash(user.password, password):
 				flash('Please check your login details and try again.')
 				return redirect(url_for('auth.login')) # if the user doesn't exist or password is wrong, reload the page
+			token = jwt.encode({'user' : email, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=15)}, current_app.config['SECRET_KEY'])
+			print("Created Token:"+token)
 			login_user(user, remember=remember) # if the above check passes, then we know the user has the right credentials
-			return redirect(url_for('main.dashboard'))
+			response = redirect(url_for('main.dashboard'))			
+			response.headers['X-JWT-TOKEN'] = token
+			return response
 		else:
 			return render_template('login.html')		
 
@@ -55,6 +92,8 @@ def signup():
 def register():
 	if request.method == 'POST':
 		name = request.form.get('name')
+		public_id = str(uuid.uuid4())
+		print("Public ID:"+public_id +" is for Front end validations and usage")
 		user = request.form.get('email')
 		phone = request.form.get('phone')
 		city = request.form.get('city')
@@ -71,7 +110,7 @@ def register():
 			return render_template('signup.html', pred=resultString)
 		
 		# create a new user with the form data. Hash the password so the plaintext version isn't saved.
-		new_user = User(name=name, email=user, phone=phone, city=city, occupation=occupation, password=generate_password_hash(password, method='sha256'))
+		new_user = User(name=name, public_id=public_id, email=user, phone=phone, city=city, occupation=occupation, password=generate_password_hash(password, method='sha256'))
 
 		# add the new user to the database
 		db.session.add(new_user)
@@ -86,38 +125,10 @@ def register():
 			return render_template('signup.html', pred="Remote registration has failed. Please contact your administrator")
 		elif(not 'errorType' in data):
 			remotedata = registeruser(params)
-			print(str(remotedata))
+			print(str(remotedata))			
 			return redirect(url_for('auth.login'))
 		else:
 			return render_template('signup.html',pred="Either user is not available in local or could not be created in remote. Please contact admin")
-
-
-
-			 
-	    
-	    
-	    
-	    
-		
-		#print(email,name)
-		#local user addition
-		#user = User.query.filter_by(email=email).first() # if this returns a user, then the email already exists in database
-
-		#if user: # if a user is found, we want to redirect back to signup page so user can try again
-		#	return redirect(url_for('auth.signup'))
-
-		# create a new user with the form data. Hash the password so the plaintext version isn't saved.
-		#new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'))
-		#print("New User being created")
-		# add the new user to the database
-		#db.session.add(new_user)
-		#db.session.commit()
-		#print("New User created")
-
-		#return redirect(url_for('auth.login'))
-	#else:
-		#return render_template('signup.html')
-			
 
 @auth.route('/logout')
 @login_required
