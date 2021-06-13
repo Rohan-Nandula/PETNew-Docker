@@ -19,11 +19,19 @@ def main():
     app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
     # database name
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("SQLALCHEMY_DATABASE_URI")
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS")    
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS")
     app.config['MAX_CONTENT_LENGTH'] = os.environ.get("MAX_CONTENT_LENGTH")
     app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
     app.config['JWT_BLACKLIST_ENABLED'] = os.environ.get('JWT_BLACKLIST_ENABLED')
     app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = os.environ.get('JWT_BLACKLIST_TOKEN_CHECKS')
+    print(app.config['SECRET_KEY'])
+
+    from .main import main
+    
+    from .auth import auth
+
+    app.register_blueprint(main, url_prefix='/')
+    app.register_blueprint(auth, url_prefix='/')
 
     db.init_app(app)
     login_manager = LoginManager()
@@ -32,8 +40,8 @@ def main():
 
     # JwtManager object
     jwt = JWTManager(app)
-
     from .models import User
+
     @login_manager.user_loader
     def load_user(user_id):
         # since the user_id is just the primary key of our user table, use it in the query for the user
