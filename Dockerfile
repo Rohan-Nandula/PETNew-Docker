@@ -2,7 +2,7 @@ FROM alpine:latest
 
 RUN apk add --no-cache sudo git python3-dev uwsgi py-pip uwsgi-router_uwsgi uwsgi-python openssh && \
 	pip3 install --updgrade pip && \
-    rm -rf /var/cache/apk/*
+        rm -rf /var/cache/apk/*
 
 RUN pip3 --no-cache-dir install -r requirements.txt
 
