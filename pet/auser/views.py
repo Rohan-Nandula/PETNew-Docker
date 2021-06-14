@@ -1,15 +1,36 @@
-# main.py
-
-from flask import Blueprint, render_template, Response
-from flask_login import current_user, login_required, login_user
-from . import db
+#imports required
+from flask import Blueprint, request, redirect, url_for, render_template, flash, abort, jsonify, Response
+from flask_login import login_required, LoginManager, UserMixin, login_user, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+#from .models import User
+#from . import db
+from pet.main import app, db
+from pet.auser.__init__ import user as user
+from pet.auser.models import User as User
 import requests
 import json
 import random
-import time
-from datetime import datetime
+import datetime, time
+from flask_jwt_extended import create_access_token
 
-main = Blueprint('main', __name__)
+auser = Blueprint('auser', __name__)
+
+# Inject login manager
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+
+@login_manager.user_loader
+def load_user(id):
+    from pet.auser.models import User
+    return User()
+
+
+@login_manager.unauthorized_handler
+def unauthorized_callback():
+    """Unauthorized callbacks bounce to login"""
+    return redirect(url_for('auth.login'))
+
 random.seed()  # Initialize the random number generator
 
 def fetchExpenses(params):
@@ -40,14 +61,14 @@ def walletBalance(params):
     print(status.json())
     return status.json()
 
-@main.route('/')
-@main.route('/home')
+@auser.route('/')
+@auser.route('/home')
 def index():
     title = "Personal Expense Tracker"
     
     return render_template("dchart.html", title = title)
 
-@main.route('/chart-data', methods=['GET','POST'])
+@auser.route('/chart-data', methods=['GET','POST'])
 def dchart():
     def generate_random_data():
         while True:
@@ -57,13 +78,13 @@ def dchart():
     # generate_random_data() is a generator
     return Response(generate_random_data(), mimetype='text/event-stream')
 	
-@main.route('/profile', methods=['GET','POST'])
+@auser.route('/profile', methods=['GET','POST'])
 @login_required
 def profile():
 		username=current_user.name
 		return render_template('profile.html', uname=username)
 
-@main.route("/dashboard", methods=['GET','POST'])
+@auser.route("/dashboard", methods=['GET','POST'])
 @login_required
 def dashboard():
 		user=current_user.email
@@ -104,12 +125,12 @@ def dashboard():
 				
 		return render_template('chart.html', labels=labels, legend1=legend1, legend2=legend2, legend3=legend3, home_expenses=home_expenses, vehicle_expenses= vehicle_expenses, medical_expenses=medical_expenses )
 
-@main.route('/wallet')
+@auser.route('/wallet')
 def wallet():
     return render_template('updatewallet.html')
 	
 # Function to add amount to wallet - AWS API Add money to wallet
-@main.route('/updatewalletpage', methods=['GET','POST'])
+@auser.route('/updatewalletpage', methods=['GET','POST'])
 def updatewalletpage() :
     user=request.form['user']
     amount = request.form['amount']   
@@ -123,11 +144,11 @@ def updatewalletpage() :
     else:
         return render_template('updatewallet.html', pred="Wallet has been updated successfully and your "+data)
 
-@main.route('/expense')
+@auser.route('/expense')
 def expense():
     return render_template('expense.html')
 
-@main.route('/expensepage', methods=['GET','POST'])
+@auser.route('/expensepage', methods=['GET','POST'])
 def expensepage() :
     user=request.form['user']
     expensedate = request.form['expensedate']
@@ -158,7 +179,7 @@ def expensepage() :
     	return render_template('expense.html', pred=json_object)
 		
 # Function to fetch current wallet balance - AWS API Wallet Balance
-@main.route('/wbalance')
+@auser.route('/wbalance')
 def wbalance():
     user = current_user.email
     params="user="+user
