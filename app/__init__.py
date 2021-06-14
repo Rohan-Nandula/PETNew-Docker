@@ -16,7 +16,10 @@ def create_app():
     login_manager.login_message = 'You must be logged in to access this page'
     login_manager.login_view = 'auth.login'
 
-    from .home import home as home_blueprint
-    app.register_blueprint(home_blueprint)
+    from .auth import auth as auth_blueprint
+    app.register_blueprint(auth_blueprint)
+
+    from .auser import auser as auser_blueprint
+    app.register_blueprint(auser_blueprint)
 
     return app
