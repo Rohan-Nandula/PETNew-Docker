@@ -1,8 +1,6 @@
 # Merge changes in packages
 from flask_login import UserMixin
-#from . import db
-from pet.auser import db
-#from passlib.hash import pbkdf2_sha256 as sha256
+from . import db
 from werkzeug.security import generate_password_hash as shaGen256, check_password_hash as shaChk256
 import shortuuid # for public id
 

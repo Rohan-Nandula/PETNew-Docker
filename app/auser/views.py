@@ -2,16 +2,16 @@
 from flask import Blueprint, request, redirect, url_for, render_template, flash, abort, jsonify, Response
 from flask_login import login_required, LoginManager, UserMixin, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-#from .models import User
-#from . import db
-from pet.main import app, db
-from pet.auser.__init__ import user as user
-from pet.auser.models import User as User
-import requests
+from .models import User
+from . import db
 import json
 import random
 import datetime, time
+import requests
 from flask_jwt_extended import create_access_token
+#from pet.main import app, db
+#from pet.auser.__init__ import user as user
+#from pet.auser.models import User as User
 
 auser = Blueprint('auser', __name__)
 

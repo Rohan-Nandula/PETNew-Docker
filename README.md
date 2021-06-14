@@ -1,38 +1,66 @@
-# flacker
+# Flask-Docker-Blueprint Template
 
-This is a dockerized Alpine Linux uWSGI server running a Flask app with a ready login blueprint module. This is meant to be a quick starting point for small or <strong>BIG</strong> Flask projects from development to production.
+This project can be used to run a basic flask app with Blueprint using docker-compose.
 
-# Quick
+## Getting Started
 
-Simply (after installing Docker naturally) you run:
+**Step 1:** Make sure git is installed on your os. I will be using macOS for the project.
 
-`docker build -t flacker/latest`
+On macOS, you can install the git using Homebrew using ```brew install git```
 
-`docker run -ti -p 8080:8080 -v $(pwd)/www:/app/www flacker/latest`
+**Step 2:** Clone the project into your local machine using below command.
 
-After all the setup is done, surf to `localhost:5000`
+```git clone https://github.com/KartikShrikantHegde/Docker-Flask-Blueprint.git```
 
-## About
+### Prerequisites
 
-The emphasis is on security, modularity and simplicity, both of which will get better as time goes on.
+**1. Docker**
 
-### Security
+Make sure you have Docker installed. Please follow the below link for official documentation from Docker to install latest version of docker on your os. For this project I am using Docker CE (18.09).
 
-The docker container and the app itself will be built as secure as possible.
+```https://docs.docker.com/docker-for-mac/install/```
 
-### Modularity
+### Installing
 
-Easy removal and configurability of shipped modules and easily replaceable front end framework.
+**Step 1:** Change to the directory where the project was cloned in previous step.
 
-### Simplicity
+```
+cd Docker-Flask-Blueprint
+```
 
-Everything will be done in the most simple way without conflicting the previous points.
+**Step 2:** Make sure Docker is up and running. You can start the docker engine from desktop icon on Mac.
 
-## Featuring
+**Step 3:** Run
 
-- [uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/) - as the web server
-- [Blueprints](http://flask.pocoo.org/docs/0.11/blueprints/)- principal modularity
-- [Flask-SQLAlchemy](http://flask-sqlalchemy.pocoo.org/2.1/) - ORM
-- [Flask-Login](https://flask-login.readthedocs.io/en/latest/) - login and logout
-- [Flask-WTF](https://flask-wtf.readthedocs.io/en/latest/) - forms
-- [Jinja2](http://jinja.pocoo.org/docs/dev/) - templating
+```
+docker-compose up --build
+```
+
+**Step 4:** Open up the browser and paste the below url
+
+```
+http://localhost:8000/
+```
+
+The browser should display Home page. The app is up and running inside a docker container using docker-compose.
+
+## Running the tests
+
+## Deployment
+
+## Built With
+
+* [Docker](http://www.dropwizard.io/1.0.2/docs/) -  Deployment model
+* [Flask](https://maven.apache.org/) - The web framework
+* [Python](https://rometools.github.io/rome/) - programming language
+* [pip](https://rometools.github.io/rome/) - Package and dependency manager
+
+## Contributing
+
+## Versioning
+
+## Authors
+
+## License
+
+## Acknowledgments

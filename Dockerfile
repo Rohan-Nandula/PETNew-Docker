@@ -1,25 +1,31 @@
-FROM alpine:latest
+# specify the image you want to use build docker image
 
-RUN apk add --no-cache sudo git python3-dev uwsgi py-pip uwsgi-router_uwsgi uwsgi-python openssh && \
-	pip3 install --updgrade pip && \
-        rm -rf /var/cache/apk/*
+FROM python:2.7
 
-RUN pip3 --no-cache-dir install -r requirements.txt
+# Maintainer name to let people know who made this image.
 
-RUN mkdir -p /app/pet && \
-    adduser -D -s /bin/sh -h /app pet
+MAINTAINER Kartik <kartik@gmail.com>
 
-COPY run.sh /app
+#apt is the ubuntu command line tool for advanced packaging tool(APT) for sw upgrade '''
 
-COPY uwsgi.ini /app/uwsgi.ini
+RUN apt update && \
+    apt install -y netcat-openbsd
 
-COPY pet /app/pet
+# set the env variable to tell where the app will be installed inside the docker
 
-RUN chown -R pet:pet /app
+ENV INSTALL_PATH /Photos-Docker-Flask
+RUN mkdir -p $INSTALL_PATH
 
-VOLUME ["/app/pet"]
+#this sets the context of where commands will be ran in and is documented
 
-EXPOSE 5000
+WORKDIR $INSTALL_PATH
 
-ENTRYPOINT ["python3"]
-CMD ["run.sh"]
+# Copy in the application code from your work station at the current directory
+# over to the working directory.
+
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
+
+COPY . .
+
+CMD python run.py
