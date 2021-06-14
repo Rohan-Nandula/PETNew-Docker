@@ -5,8 +5,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token
 import requests
 from . import auth
-#from . import User
+#from .__init__ import app as app
+#from app.__init__ import user as user
+from app.__init__ import db
 #from .models import User
+from app.auth.models import User as User
 #from . import db
 #from pet.main import app, db
 #from pet.auth.__init__ import user as user
@@ -15,20 +18,11 @@ from . import auth
 #Definitions for Authentication - Remote APIs
 
 # Inject login manager
-login_manager = LoginManager()
-login_manager.init_app(app)
+#login_manager = LoginManager()
+#login_manager.init_app(app)
 
 
-@login_manager.user_loader
-def load_user(id):
-    from pet.auser.models import User
-    return User()
 
-
-@login_manager.unauthorized_handler
-def unauthorized_callback():
-    """Unauthorized callbacks bounce to login"""
-    return redirect(url_for('auth.login'))
 
 # Function to check user credentials - AWS API User Details
 
@@ -139,8 +133,8 @@ def register():
 @login_required
 def logout():
     """Logout user and bounce to the login page"""
-        logout_user()
-        return redirect(url_for('main.index'))
+    logout_user()
+    return redirect(url_for('main.index'))
 
 @auth.route("/token", methods=["POST"])
 def create_token():

@@ -1,6 +1,6 @@
 # Merge changes in packages
 from flask_login import UserMixin
-from . import db
+from app import db
 from werkzeug.security import generate_password_hash as shaGen256, check_password_hash as shaChk256
 import shortuuid # for public id
 
@@ -16,18 +16,73 @@ class User(db.Model, UserMixin):
     occupation = db.Column(db.String(100))
     password = db.Column(db.String(100))
 
-    def __init__(self):
-        self.id = None        
-        self.name = None
-        self.public_id = None
-        self.email = None
-        self.phone = None
-        self.city = None
-        self.occupation = None
-        self.password = None
+    """
+    Save user details in Database
+    """
+    def save_record(self):
 
-    def __repr__(self):
-        return '<User %r>' % self.email
+        db.session.add(self)
+
+        db.session.commit()	
+
+    """
+    Find user by name
+    """
+    @classmethod
+    def find_by_name(cls, name):
+
+        return cls.query.filter_by(name=name).first()
+
+    """
+    return all the user data in json form available in DB
+    """
+    @classmethod
+    def return_all(cls):
+
+        def to_json(x):
+
+            return {
+
+                'name': x.username,
+
+                'public_id': x.public_id,
+
+                'email': x.email,
+
+                'password': x.password,
+
+                'phone': x.phone,
+
+                'city': x.city,
+
+                'occupation': x.occupation
+
+            }
+
+        return {'users': [to_json(user) for user in UserModel.query.all()]}
+
+    """
+    Delete user data
+    """
+    @classmethod
+    def delete_all(cls):
+
+        try:
+
+            num_rows_deleted = db.session.query(cls).delete()
+
+            db.session.commit()
+
+            return {'message': f'{num_rows_deleted} row(s) deleted'}
+
+        except:
+
+            return {'message': 'Something went wrong'}
+
+    """
+    generate hash from password by encryption using sha256
+    """
+
 
     """
     generate hash from password by encryption using sha256

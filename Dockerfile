@@ -1,10 +1,10 @@
 # specify the image you want to use build docker image
 
-FROM python:2.7
+FROM python:3.9
 
 # Maintainer name to let people know who made this image.
 
-MAINTAINER Kartik <kartik@gmail.com>
+MAINTAINER Rohan  <rohan@gmail.com>
 
 #apt is the ubuntu command line tool for advanced packaging tool(APT) for sw upgrade '''
 
@@ -13,7 +13,7 @@ RUN apt update && \
 
 # set the env variable to tell where the app will be installed inside the docker
 
-ENV INSTALL_PATH /Photos-Docker-Flask
+ENV INSTALL_PATH /Petapp-Docker
 RUN mkdir -p $INSTALL_PATH
 
 #this sets the context of where commands will be ran in and is documented
