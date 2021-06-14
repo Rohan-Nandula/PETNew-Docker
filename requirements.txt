@@ -10,4 +10,3 @@ requests==2.25.1
 shortuuid==1.0.1
 SQLAlchemy==1.4.18
 Werkzeug==2.0.1
-

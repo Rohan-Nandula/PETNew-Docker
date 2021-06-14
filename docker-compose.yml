@@ -1,4 +1,4 @@
-version: 'petapp'
+version: '2'
 
 services:
   website:
